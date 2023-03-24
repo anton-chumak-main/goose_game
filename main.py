@@ -8,7 +8,7 @@ pygame.init()
 
 FPS = pygame.time.Clock()
 
-screen = width, height = 1100, 800
+screen = width, height = 1700, 900
 
 BLACK = 0, 0, 0
 WHITE = 255, 255, 255
@@ -31,16 +31,15 @@ player_speed = 10
 
 
 def create_enemy():
-    enemy = pygame.Surface((20, 20))
-    enemy.fill(RED)
+    enemy = pygame.image.load("enemy.png").convert_alpha()
+
     enemy_rect = pygame.Rect(width, random.randint(0, height), *enemy.get_size())
     enemy_speed = random.randint(4, 6)
     return [enemy, enemy_rect, enemy_speed]
 
 
 def create_bonus():
-    bonus = pygame.Surface((20, 20))
-    bonus.fill(GREEN)
+    bonus = pygame.image.load("bonus.png").convert_alpha()
     bonus_rect = pygame.Rect(random.randint(0, width), 0, *bonus.get_size())
     bonus_speed = random.randint(4, 6)
     return [bonus, bonus_rect, bonus_speed]
@@ -106,7 +105,7 @@ while is_working:
 
     main_surface.blit(player, player_rect)
 
-    main_surface.blit(font.render(str(scores), True, YELLOW), (width - 30, 0))   # Painting bonuses
+    main_surface.blit(font.render(str(scores), True, YELLOW), (width - 60, 30))   # Painting bonuses
 
     for enemy in enemies:
         enemy[1] = enemy[1].move(-enemy[2], 0)
