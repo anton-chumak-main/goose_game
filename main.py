@@ -2,6 +2,8 @@ import pygame
 import random
 from pygame.constants import QUIT, K_DOWN, K_UP, K_RIGHT, K_LEFT
 
+from os import listdir
+
 pygame.init()
 
 FPS = pygame.time.Clock()
@@ -19,11 +21,11 @@ font = pygame.font.SysFont("Verdana", 20)        # Bonus counting
 
 main_surface = pygame.display.set_mode(screen)
 
+IMGS_PATH = "goose_animation"
 # ball = pygame.Surface((20, 20))
 # ball.fill(WHITE)
-
+player_images = [pygame.image.load(IMGS_PATH + "/" + file).convert_alpha() for file in listdir(IMGS_PATH)]
 player = pygame.image.load("player.png").convert_alpha()
-
 player_rect = player.get_rect()
 player_speed = 10
 
@@ -56,6 +58,10 @@ pygame.time.set_timer(CREATE_ENEMY, 1500)
 CREATE_BONUS = pygame.USEREVENT + 2
 pygame.time.set_timer(CREATE_BONUS, 2500)
 
+CHANGE_IMGS = pygame.USEREVENT + 3
+pygame.time.set_timer(CHANGE_IMGS, 100)
+
+img_index = 0
 scores = 0
 
 enemies = []
@@ -77,10 +83,26 @@ while is_working:
         if event.type == CREATE_BONUS:
             bonuses.append(create_bonus())
 
+        if event.type == CHANGE_IMGS:
+            img_index += 1
+            if img_index == len(player_images):
+                img_index = 0
+            player = player_images[img_index]
+
     pressed_keys = pygame.key.get_pressed()
 
-    # main_surface.fill(WHITE)
-    main_surface.blit(bg, (0, 0))  # Background picture
+    # MOVE BACKGROUND
+    bgX -= bg_speed
+    bgX2 -= bg_speed
+
+    if bgX < -bg.get_width():
+        bgX = bg.get_width()
+
+    if bgX2 < -bg.get_width():
+        bgX2 = bg.get_width()
+
+    main_surface.blit(bg, (bgX, 0))
+    main_surface.blit(bg, (bgX2, 0))
 
     main_surface.blit(player, player_rect)
 
